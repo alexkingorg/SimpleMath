@@ -7,9 +7,15 @@ TODO:
 - styling
 - html storage to save page locally
 - ability to delete rows
-- redo row numbering in inverse order
 - show row numbers
 - auto-scroll rows up
+- allow re-ordering of rows?
+
+TEST:
+
+- iPhone
+- Android
+- BlackBerry (6)
 
 -->
 
@@ -92,8 +98,23 @@ $(function() {
 // create new line
 		var $eqs = $('.equation');
 		var $eq = $('.equation:first').clone();
-		var row = $eqs.size() + 1;
-		$eq.attr('data-row', row).find(':input').val('').end().appendTo('.equations');
+		$eq.find(':input').val('').end().appendTo('.equations');
+		var i = 0;
+		var row = '';
+		$($('.equation').get().reverse()).each(function() {
+// re-number rows
+			if (i == 10) {
+				row = 0;
+			}
+			else if (i >= 1 && i <= 9) {
+				row = i;
+			}
+			else {
+				row = '';
+			}
+			$(this).attr('data-row', row);
+			i++;
+		});
 		$('.equation:last :input:first').focus();
 	});
 });
