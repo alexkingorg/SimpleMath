@@ -5,6 +5,8 @@ Copyright 2011 Alex King, All rights reserved.
 TODO:
 
 - styling
+	- desktop
+	- mobile
 - ability to delete rows (cmd+delete to delete row as well as link)
 - show row numbers
 - auto-scroll rows up
@@ -31,7 +33,7 @@ TEST:
 
 <div class="equation" data-row="1">
 	<p><input type="text" class="math"></p>
-	<p>Result: <input type="number" class="result"></p>
+	<p>Result: <input type="text" class="result"></p>
 </div>
 
 </div>
@@ -57,6 +59,7 @@ $(function() {
 					var c = $result.val();
 					var pos = ('' + a + c).length;
 					$(this).val('' + a + c + b).caret({ start: pos, end: pos});
+					$(this).trigger('calc');
 					keyUp = false;
 				}
 			}
@@ -66,13 +69,18 @@ $(function() {
 		if (!keyUp) {
 			return;
 		}
-		var eq = $(this).val();
+		$(this).trigger('calc');
+// if key = enter, set focus to result and select for easy copying
+		if (e.which === 13) {
+			e.stopPropagation();
+			$(this).closest('.equation').find('.result').focus().select();
+		}
+	}).live('calc', function() {
+// simple math
 		var val = null;
 		var valError = '...';
-		var $result = $(this).closest('.equation').find('.result');
-		eq = eq.replace(/[^0-9 \.\)\(\+\-\*\/]+/g, '');
 		try {
-			eval('val = ' + eq + ';');
+			eval('val = ' + $(this).val().replace(/[^0-9 \.\)\(\+\-\*\/]+/g, '') + ';');
 		}
 		catch(err) {
 			val = valError;
@@ -80,29 +88,26 @@ $(function() {
 		if (isNaN(val)) {
 			val = valError;
 		}
-		$result.val(val);
-// if key = enter, set focus to result and select for easy copying
-		if (e.which === 13) {
-			e.stopPropagation();
-			$result.focus().select();
-		}
+		$(this).closest('.equation').find('.result').val(val);
 	}).filter(':first').focus();
 	$('.equation .result').live('keyup', function(e) {
-// auto-create new line
+// auto-create new row
 		if (e.which === 13) {
 			e.stopPropagation();
 			$('.new-eq').click();
 		}
 	});
 	$('.new-eq').click(function() {
-// create new line
+// create new row
 		var $eqs = $('.equation');
-		var $eq = $('.equation:first').clone();
-		$eq.find(':input').val('').end().appendTo('.equations');
+		$('.equation:first').clone().find(':input').val('').end().appendTo('.equations');
+		$('.equations').trigger('renumber').find('.equation:last :input:first').focus();
+	});
+	$('.equations').bind('renumber', function() {
+// re-number rows
 		var i = 0;
 		var row = '';
 		$($('.equation').get().reverse()).each(function() {
-// re-number rows
 			if (i == 10) {
 				row = 0;
 			}
@@ -115,7 +120,6 @@ $(function() {
 			$(this).attr('data-row', row);
 			i++;
 		});
-		$('.equation:last :input:first').focus();
 	});
 });
 </script>
