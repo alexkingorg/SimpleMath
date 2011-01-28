@@ -1,0 +1,103 @@
+<!--
+
+Copyright 2011 Alex King, All rights reserved.
+
+TODO:
+
+- styling
+- html storage to save page locally
+- ability to delete rows
+- redo row numbering in inverse order
+- show row numbers
+- auto-scroll rows up
+
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>SimpleMath</title>
+</head>
+<body>
+
+<div class="equations">
+
+<div class="equation" data-row="1">
+	<p><input type="text" class="math"></p>
+	<p>Result: <input type="number" class="result"></p>
+</div>
+
+</div>
+
+<p><input type="button" name="new-eq" value="New" class="new-eq"></p>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+<script type="text/javascript" src="./js/jquery.caret.min.js"></script>
+<script type="text/javascript">
+$(function() {
+	var keyUp = true;
+	$('.equation .math').live('keydown', function(e) {
+// handle insertion of values from previous lines
+		keyUp = true;
+		if (e.ctrlKey) {
+			var row = e.keyCode - 48;
+			if (row >= 0 && row <= 9) {
+				$result = $('.equations .equation[data-row=' + row + '] .result');
+				if ($result.size()) {
+					var eq = $(this).val();
+					var a = eq.substring(0, $(this).caret().start);
+					var b = eq.substring($(this).caret().end, eq.length);
+					var c = $result.val();
+					var pos = ('' + a + c).length;
+					$(this).val('' + a + c + b).caret({ start: pos, end: pos});
+					keyUp = false;
+				}
+			}
+		}
+	}).live('keyup', function(e) {
+// do math
+		if (!keyUp) {
+			return;
+		}
+		var eq = $(this).val();
+		var val = null;
+		var valError = '...';
+		var $result = $(this).closest('.equation').find('.result');
+		eq = eq.replace(/[^0-9 \.\)\(\+\-\*\/]+/g, '');
+		try {
+			eval('val = ' + eq + ';');
+		}
+		catch(err) {
+			val = valError;
+		}
+		if (isNaN(val)) {
+			val = valError;
+		}
+		$result.val(val);
+// if key = enter, set focus to result and select for easy copying
+		if (e.which === 13) {
+			e.stopPropagation();
+			$result.focus().select();
+		}
+	}).filter(':first').focus();
+	$('.equation .result').live('keyup', function(e) {
+// auto-create new line
+		if (e.which === 13) {
+			e.stopPropagation();
+			$('.new-eq').click();
+		}
+	});
+	$('.new-eq').click(function() {
+// create new line
+		var $eqs = $('.equation');
+		var $eq = $('.equation:first').clone();
+		var row = $eqs.size() + 1;
+		$eq.attr('data-row', row).find(':input').val('').end().appendTo('.equations');
+		$('.equation:last :input:first').focus();
+	});
+});
+</script>
+
+</body>
+</html>
