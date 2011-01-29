@@ -1,26 +1,3 @@
-<!--
-
-Copyright 2011 Alex King, All rights reserved.
-
-TODO:
-
-- styling
-	- desktop
-	- mobile
-- ability to delete rows (cmd+delete to delete row as well as link)
-- show row numbers
-- auto-scroll rows up
-- html storage to save page locally
-- allow re-ordering of rows?
-
-TEST:
-
-- iPhone
-- Android
-- BlackBerry (6)
-
--->
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -30,13 +7,17 @@ TEST:
 	<style type="text/css">
 	body {
 		background: #fff;
+		display: block;
 		font: 14px Helvetica, "Lucida Grande", sans-serif;
+		height: 100%;
 		max-width: 800px;
 		margin: auto;
 		padding: 0;
 	}
 	.equations {
+		background: #fff;
 		margin: 30px 10px;
+		min-height: 80%;
 	}
 	.equation {
 		font-size: 20px;
@@ -69,7 +50,14 @@ TEST:
 		width: 30%;
 	}
 	.buttons {
-		margin: 0 10px;
+		margin: 0 10px 60px;
+	}
+	.legal {
+		bottom: 5px;
+		color: #bbb;
+		display: none;
+		font-size: 11px;
+		margin: 0 10px 10px;
 	}
 	</style>
 </head>
@@ -77,15 +65,17 @@ TEST:
 
 <div class="equations">
 
-<div class="equation">
-	<input type="text" class="math">
-	<span class="equals">=</span>
-	<input type="text" class="result">
-</div>
+	<div class="equation">
+		<input type="text" class="math">
+		<span class="equals">=</span>
+		<input type="text" class="result">
+	</div>
 
 </div>
 
 <p class="buttons"><a href="#" class="new-eq">New</a></p>
+
+<p class="legal">Copyright &copy; 2011 Alex King. All rights reserved.</p>
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
 <script type="text/javascript" src="./js/jquery.caret.min.js"></script>
@@ -149,6 +139,7 @@ $(function() {
 		var $eqs = $('.equation');
 		$('.equation:first').clone().find(':input').val('').end().appendTo('.equations');
 		$('.equations').trigger('renumber').find('.equation:last :input:first').focus();
+		$('html, body').animate({scrollTop: $('body').height()}, 800);
 		return false;
 	});
 	$('.equations').bind('renumber', function() {
@@ -175,6 +166,27 @@ $(function() {
 	});
 });
 </script>
+
+<!--
+
+Copyright 2011 Alex King, All rights reserved.
+
+TODO:
+
+- ability to delete rows (cmd+delete to delete row)
+- ctrl n for new row
+- clear button?
+- pulse effect on a row number when it is inserted by key
+- html storage to save page locally
+- allow re-ordering of rows?
+
+TEST:
+
+- iPhone
+- Android
+- BlackBerry (6)
+
+-->
 
 </body>
 </html>
