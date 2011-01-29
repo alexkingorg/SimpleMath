@@ -102,10 +102,10 @@ $(function() {
 			}
 		}
 	}).live('keyup', function(e) {
-// do math
 		if (!keyUp) {
 			return;
 		}
+// do math
 		$(this).trigger('calc');
 // if key = enter, set focus to result and select for easy copying
 		if (e.which === 13) {
@@ -128,8 +128,8 @@ $(function() {
 		$(this).closest('.equation').find('.result').val(val);
 	}).filter(':first').focus();
 	$('.equation .result').live('keyup', function(e) {
-// auto-create new row
 		if (e.which === 13) {
+// auto-create new row on return key
 			e.stopPropagation();
 			$('.new-eq').click();
 		}
