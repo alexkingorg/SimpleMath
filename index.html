@@ -26,19 +26,66 @@ TEST:
 <head>
 	<meta charset="utf-8" />
 	<title>SimpleMath</title>
+	<meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"> 
+	<style type="text/css">
+	body {
+		background: #fff;
+		font: 14px Helvetica, "Lucida Grande", sans-serif;
+		max-width: 800px;
+		margin: auto;
+		padding: 0;
+	}
+	.equations {
+		margin: 30px 10px;
+	}
+	.equation {
+		font-size: 20px;
+		margin-bottom: 15px;
+		white-space: nowrap;
+	}
+	.equation span.row-num {
+		background: #ffc;
+		border-radius: 18px;
+		-moz-border-radius: 18px;
+		-webkit-border-radius: 18px;
+		color: #999;
+		display: block;
+		float: right;
+		font-size: 12px;
+		font-weight: bold;
+		margin-top: 3px;
+		padding: 6px 8px;
+	}
+	.equation input {
+		border: 0;
+		border-bottom: 3px solid #ddd;
+		font-size: 20px;
+	}
+	.equation .math {
+		width: 60%;
+	}
+	.equation .result {
+		text-align: right;
+		width: 30%;
+	}
+	.buttons {
+		margin: 0 10px;
+	}
+	</style>
 </head>
 <body>
 
 <div class="equations">
 
-<div class="equation" data-row="1">
-	<p><input type="text" class="math"></p>
-	<p>Result: <input type="text" class="result"></p>
+<div class="equation">
+	<input type="text" class="math">
+	<span class="equals">=</span>
+	<input type="text" class="result">
 </div>
 
 </div>
 
-<p><input type="button" name="new-eq" value="New" class="new-eq"></p>
+<p class="buttons"><a href="#" class="new-eq">New</a></p>
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
 <script type="text/javascript" src="./js/jquery.caret.min.js"></script>
@@ -102,12 +149,14 @@ $(function() {
 		var $eqs = $('.equation');
 		$('.equation:first').clone().find(':input').val('').end().appendTo('.equations');
 		$('.equations').trigger('renumber').find('.equation:last :input:first').focus();
+		return false;
 	});
 	$('.equations').bind('renumber', function() {
 // re-number rows
 		var i = 0;
 		var row = '';
 		$($('.equation').get().reverse()).each(function() {
+			$(this).find('span.row-num').remove();
 			if (i == 10) {
 				row = 0;
 			}
@@ -118,6 +167,9 @@ $(function() {
 				row = '';
 			}
 			$(this).attr('data-row', row);
+			if (row != '') {
+				$(this).prepend('<span class="row-num">' + row + '</span>');
+			}
 			i++;
 		});
 	});
