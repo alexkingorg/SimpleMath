@@ -8,7 +8,6 @@ ob_start('ob_gzhandler');
 <head>
 	<meta charset="utf-8" />
 	<title>SimpleMath</title>
-	<meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"> 
 	<style type="text/css">
 	body {
 		background: #fff;
@@ -214,16 +213,23 @@ Copyright 2011 Alex King, All rights reserved.
 
 FEATURES:
 
-- strips non numeric garbage when evaluating (you can leave $ and , in your numbers)
-- enter from expression side takes you to result side and selects result for easy copying
-- enter again will give you a new row
-- ctrl+n at any time will give you a new row
-- enter the result of one of the previous 10 rows (numbered) by using ctrl+(1-9)
+- math is done by JavaScript, anything more than basic algebra is an accident
+- strips non-numeric garbage when evaluating (you can leave $ and , in your numbers)
+- hit ENTER from expression side takes you to result side and selects result for easy copying
+- hit ENTER again (while in the result field) to get a new row
+- CTRL+N at any time will give you a new row
+- enter the result of one of the previous 10 rows (numbered) at the cursor position by using CTRL+(1-9)
 - numbers reset on every new row so that referencing the previous row is always 1, the second back is always 2, etc.
-- delete the current row with cmd+delete
+- delete the current row with CMD+DELETE
+
+NOTES:
+
+The CTRL key isn't a good choice for windows users, however I am not one. Please fork as needed.
 
 TODO:
 
+- README
+- set focus to row before the one that is deleted on delete
 - position credits
 - clear button?
 - html storage to save page locally
