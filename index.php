@@ -47,6 +47,7 @@ ob_start('ob_gzhandler');
 		border: 0;
 		border-bottom: 3px solid #ddd;
 		font-size: 20px;
+		outline: none;
 	}
 	.equation .math {
 		width: 60%;
@@ -198,6 +199,12 @@ $(function() {
 			i++;
 		});
 	});
+	$('body').keydown(function(e) {
+		if (e.ctrlKey && e.keyCode == 78) {
+			$('.new-eq').click();
+			keyUp = false;
+		}		
+	});
 });
 </script>
 
@@ -205,9 +212,19 @@ $(function() {
 
 Copyright 2011 Alex King, All rights reserved.
 
+FEATURES:
+
+- strips non numeric garbage when evaluating (you can leave $ and , in your numbers)
+- enter from expression side takes you to result side and selects result for easy copying
+- enter again will give you a new row
+- ctrl+n at any time will give you a new row
+- enter the result of one of the previous 10 rows (numbered) by using ctrl+(1-9)
+- numbers reset on every new row so that referencing the previous row is always 1, the second back is always 2, etc.
+- delete the current row with cmd+delete
+
 TODO:
 
-- ctrl n for new row
+- position credits
 - clear button?
 - html storage to save page locally
 - allow re-ordering of rows?
