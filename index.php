@@ -220,6 +220,7 @@ FEATURES:
 - CTRL+N at any time will give you a new row
 - enter the result of one of the previous 10 rows (numbered) at the cursor position by using CTRL+(1-9)
 - numbers reset on every new row so that referencing the previous row is always 1, the second back is always 2, etc.
+- if you get so many rows that they extend off the screen, the window automatically scrolls up like an old-school calculator tape
 - delete the current row with CMD+DELETE
 
 NOTES:
