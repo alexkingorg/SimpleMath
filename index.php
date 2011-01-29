@@ -1,3 +1,8 @@
+<?php
+
+ob_start('ob_gzhandler');
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -78,10 +83,14 @@
 
 <p class="legal">Copyright &copy; 2011 Alex King. All rights reserved.</p>
 
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
-<script type="text/javascript" src="./js/jquery-ui-1.8.9.custom.min.js"></script>
-<script type="text/javascript" src="./js/jquery.caret.min.js"></script>
 <script type="text/javascript">
+<?php
+
+include('js/jquery-1.4.4.min.js');
+include('js/jquery-ui-1.8.9.custom.min.js');
+include('js/jquery.caret.min.js');
+
+?>
 $(function() {
 	var keyUp = true;
 	$('.equation .math').live('keydown', function(e) {
