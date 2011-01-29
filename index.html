@@ -15,7 +15,6 @@
 		padding: 0;
 	}
 	.equations {
-		background: #fff;
 		margin: 30px 10px;
 		min-height: 80%;
 	}
@@ -25,7 +24,8 @@
 		white-space: nowrap;
 	}
 	.equation span.row-num {
-		background: #ffc;
+		background-color: #ffc;
+		border: 2px solid #ffc;
 		border-radius: 18px;
 		-moz-border-radius: 18px;
 		-webkit-border-radius: 18px;
@@ -35,7 +35,8 @@
 		font-size: 12px;
 		font-weight: bold;
 		margin-top: 3px;
-		padding: 6px 8px;
+		padding: 4px 5px 4px 6px;
+		text-shadow: #fff 1px 1px 1px;
 	}
 	.equation input {
 		border: 0;
@@ -78,6 +79,7 @@
 <p class="legal">Copyright &copy; 2011 Alex King. All rights reserved.</p>
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+<script type="text/javascript" src="./js/jquery-ui-1.8.9.custom.min.js"></script>
 <script type="text/javascript" src="./js/jquery.caret.min.js"></script>
 <script type="text/javascript">
 $(function() {
@@ -90,6 +92,14 @@ $(function() {
 			if (row >= 0 && row <= 9) {
 				$result = $('.equations .equation[data-row=' + row + '] .result');
 				if ($result.size()) {
+					$result.closest('.equation').find('.row-num').animate({
+						backgroundColor: '#fc9',
+						borderColor: '#fc9'
+					}, 500, function() {
+						$(this).animate({
+							backgroundColor: '#ffc'
+						}, 500);
+					});
 					var eq = $(this).val();
 					var a = eq.substring(0, $(this).caret().start);
 					var b = eq.substring($(this).caret().end, eq.length);
@@ -100,6 +110,13 @@ $(function() {
 					keyUp = false;
 				}
 			}
+		}
+		if (e.metaKey && e.keyCode == 8) {
+// create new one first if this is the last one
+			if ($('.equation').size() == 1) {
+				$('.new-eq').click();
+			}
+			$(this).closest('.equation').remove();
 		}
 	}).live('keyup', function(e) {
 		if (!keyUp) {
@@ -127,7 +144,15 @@ $(function() {
 		}
 		$(this).closest('.equation').find('.result').val(val);
 	}).filter(':first').focus();
-	$('.equation .result').live('keyup', function(e) {
+	$('.equation .result').live('keydown', function(e) {
+		if (e.metaKey && e.keyCode == 8) { // this is duplicated above - should clean it up
+// create new one first if this is the last one
+			if ($('.equation').size() == 1) {
+				$('.new-eq').click();
+			}
+			$(this).closest('.equation').remove();
+		}
+	}).live('keyup', function(e) {
 		if (e.which === 13) {
 // auto-create new row on return key
 			e.stopPropagation();
@@ -173,10 +198,8 @@ Copyright 2011 Alex King, All rights reserved.
 
 TODO:
 
-- ability to delete rows (cmd+delete to delete row)
 - ctrl n for new row
 - clear button?
-- pulse effect on a row number when it is inserted by key
 - html storage to save page locally
 - allow re-ordering of rows?
 
