@@ -24,7 +24,7 @@ Released under the FreeBSD license
 		margin: auto;
 		padding: 0;
 	}
-	header {
+	footer {
 		background: #fff;
 		bottom: 0;
 		padding: 10px;
@@ -32,7 +32,7 @@ Released under the FreeBSD license
 		text-align: center;
 		width: 800px;
 	}
-	header h1 {
+	footer h1 {
 		color: #999;
 		display: inline;
 		font-size: 14px;
@@ -89,11 +89,6 @@ Released under the FreeBSD license
 </head>
 <body>
 
-<header>
-	<h1>SimpleMath</h1>
-	<span class="legal">Copyright &copy; 2011 <a href="http://alexking.org">Alex King</a>. All rights reserved.</span>
-</header>
-
 <div class="equations">
 
 	<div class="equation">
@@ -105,6 +100,11 @@ Released under the FreeBSD license
 </div>
 
 <p class="buttons"><a href="#" class="new-eq">New</a></p>
+
+<footer>
+	<h1>SimpleMath</h1>
+	<span class="legal">Copyright &copy; 2011 <a href="http://alexking.org">Alex King</a>. All rights reserved.</span>
+</footer>
 
 <script type="text/javascript">
 <?php
