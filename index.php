@@ -5,6 +5,12 @@ ob_start('ob_gzhandler');
 ?>
 <!DOCTYPE html>
 <html>
+<!--
+Copyright 2011 Alex King (alexking.org)
+All rights reserved.
+
+Released under the FreeBSD license
+-->
 <head>
 	<meta charset="utf-8" />
 	<title>SimpleMath</title>
@@ -17,6 +23,20 @@ ob_start('ob_gzhandler');
 		max-width: 800px;
 		margin: auto;
 		padding: 0;
+	}
+	header {
+		background: #fff;
+		bottom: 0;
+		padding: 10px;
+		position: fixed;
+		text-align: center;
+		width: 800px;
+	}
+	header h1 {
+		color: #999;
+		display: inline;
+		font-size: 14px;
+		padding-right: 20px;
 	}
 	.equations {
 		margin: 30px 10px;
@@ -59,15 +79,20 @@ ob_start('ob_gzhandler');
 		margin: 0 10px 60px;
 	}
 	.legal {
-		bottom: 5px;
 		color: #bbb;
-		display: none;
 		font-size: 11px;
-		margin: 0 10px 10px;
+	}
+	.legal a, .legal a:visited {
+		color: #999;
 	}
 	</style>
 </head>
 <body>
+
+<header>
+	<h1>SimpleMath</h1>
+	<span class="legal">Copyright &copy; 2011 <a href="http://alexking.org">Alex King</a>. All rights reserved.</span>
+</header>
 
 <div class="equations">
 
@@ -80,8 +105,6 @@ ob_start('ob_gzhandler');
 </div>
 
 <p class="buttons"><a href="#" class="new-eq">New</a></p>
-
-<p class="legal">Copyright &copy; 2011 Alex King. All rights reserved.</p>
 
 <script type="text/javascript">
 <?php
@@ -99,8 +122,8 @@ $(function() {
 		if (e.ctrlKey) {
 			var row = e.keyCode - 48;
 			if (row >= 0 && row <= 9) {
-				$result = $('.equations .equation[data-row=' + row + '] .result');
-				if ($result.size()) {
+				$result = $('.equations .equation[data-row-num=' + row + '] .result');
+				if ($result.size() && $result.val() != '...') {
 					$result.closest('.equation').find('.row-num').animate({
 						backgroundColor: '#fc9',
 						borderColor: '#fc9'
@@ -122,10 +145,20 @@ $(function() {
 		}
 		if (e.metaKey && e.keyCode == 8) {
 // create new one first if this is the last one
+			var $eq = $(this).closest('.equation');
 			if ($('.equation').size() == 1) {
 				$('.new-eq').click();
 			}
-			$(this).closest('.equation').remove();
+			else {
+				var row = parseInt($eq.attr('data-row'));
+				var $foc = $('.equation[data-row=' + (row + 1) + ']');
+				if (!$foc.size()) {
+					$foc = $('.equation[data-row=' + (row - 1) + ']');
+				}
+				$foc.find('.math').focus();
+			}
+			$eq.remove();
+			$('.equations').trigger('renumber');
 		}
 	}).live('keyup', function(e) {
 		if (!keyUp) {
@@ -156,10 +189,23 @@ $(function() {
 	$('.equation .result').live('keydown', function(e) {
 		if (e.metaKey && e.keyCode == 8) { // this is duplicated above - should clean it up
 // create new one first if this is the last one
+			var $eq = $(this).closest('.equation');
 			if ($('.equation').size() == 1) {
 				$('.new-eq').click();
 			}
-			$(this).closest('.equation').remove();
+			else {
+				var row = parseInt($eq.attr('data-row'));
+				var $foc = $('.equation[data-row=' + (row + 1) + ']');
+				if (!$foc.size()) {
+					$foc = $('.equation[data-row=' + (row - 1) + ']');
+				}
+				$foc.find('.math').focus();
+			}
+			$eq.remove();
+			$('.equations').trigger('renumber');
+		}
+		if (!e.metaKey) {
+			return false;
 		}
 	}).live('keyup', function(e) {
 		if (e.which === 13) {
@@ -191,7 +237,10 @@ $(function() {
 			else {
 				row = '';
 			}
-			$(this).attr('data-row', row);
+			$(this).attr({
+				'data-row': i,
+				'data-row-num': row
+			});
 			if (row != '') {
 				$(this).prepend('<span class="row-num">' + row + '</span>');
 			}
@@ -206,43 +255,5 @@ $(function() {
 	});
 });
 </script>
-
-<!--
-
-Copyright 2011 Alex King, All rights reserved.
-
-FEATURES:
-
-- math is done by JavaScript, anything more than basic algebra is an accident
-- strips non-numeric garbage when evaluating (you can leave $ and , in your numbers)
-- hit ENTER from expression side takes you to result side and selects result for easy copying
-- hit ENTER again (while in the result field) to get a new row
-- CTRL+N at any time will give you a new row
-- enter the result of one of the previous 10 rows (numbered) at the cursor position by using CTRL+(1-9)
-- numbers reset on every new row so that referencing the previous row is always 1, the second back is always 2, etc.
-- if you get so many rows that they extend off the screen, the window automatically scrolls up like an old-school calculator tape
-- delete the current row with CMD+DELETE
-
-NOTES:
-
-The CTRL key isn't a good choice for windows users, however I am not one. Please fork as needed.
-
-TODO:
-
-- README
-- set focus to row before the one that is deleted on delete
-- position credits
-- clear button?
-- html storage to save page locally
-- allow re-ordering of rows?
-
-TEST:
-
-- iPhone
-- Android
-- BlackBerry (6)
-
--->
-
 </body>
 </html>
